@@ -63,70 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _mapboxGl = __webpack_require__(1);
-
-var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-window.addEventListener("DOMContentLoaded", function () {
-  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
-  var map = new _mapboxGl2.default.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v9',
-    center: [-77.186587, 38.895939],
-    zoom: 5,
-    scrollZoom: false
-  });
-
-  map.on('load', function () {
-    map.addLayer({
-      id: 'terrain-data',
-      type: 'line',
-      source: {
-        type: 'vector',
-        url: 'mapbox://mapbox.mapbox-terrain-v2'
-      },
-      'source-layer': 'contour',
-      "paint": {
-        "line-color": "#32cd32"
-      }
-    });
-
-    map.addLayer({
-      id: 'rpd_parks',
-      type: 'fill',
-      source: {
-        type: 'vector',
-        url: 'mapbox://mapbox.3o7ubwm8'
-      },
-      'source-layer': 'RPD_Parks',
-      "paint": {
-        "fill-color": "#32cd32"
-      }
-    });
-  });
-
-  map.on('click', function () {
-    map.flyTo({
-      center: [-77.186587, 38.895939],
-      zoom: 17
-    });
-  });
-});
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var require;var require;(function(f){if(true){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.mapboxgl = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return require(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -580,10 +521,10 @@ module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","
 
 
 //# sourceMappingURL=mapbox-gl.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports) {
 
 var g;
@@ -608,6 +549,107 @@ try {
 
 module.exports = g;
 
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _mapboxGl = __webpack_require__(0);
+
+var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.addEventListener("DOMContentLoaded", function () {
+  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
+  var map = new _mapboxGl2.default.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v9',
+    center: [-77.186587, 38.895939],
+    zoom: 5,
+    scrollZoom: false
+  });
+
+  map.on('load', function () {
+    map.addLayer({
+      id: 'terrain-data',
+      type: 'line',
+      source: {
+        type: 'vector',
+        url: 'mapbox://mapbox.mapbox-terrain-v2'
+      },
+      'source-layer': 'contour',
+      "paint": {
+        "line-color": "#32cd32"
+      }
+    });
+
+    map.addLayer({
+      id: 'rpd_parks',
+      type: 'fill',
+      source: {
+        type: 'vector',
+        url: 'mapbox://mapbox.3o7ubwm8'
+      },
+      'source-layer': 'RPD_Parks',
+      "paint": {
+        "fill-color": "#32cd32"
+      }
+    });
+
+    map.setPaintProperty('water', 'fill-color', '#D4AF37');
+    map.setPaintProperty('sand', 'fill-color', '#00FFFF');
+    map.setPaintProperty('building', 'fill-color', '#FF9933');
+    map.setPaintProperty("road-primary", 'line-color', '#FF9933');
+    map.setStyle({
+      "version": 8,
+      "layers": [{
+        "id": "water-label",
+        "type": "symbol",
+        "source": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+        "paint": {
+          'text-color': '#8b0000'
+        }
+      }, {
+        "id": "airport-label",
+        "type": "symbol",
+        "paint": {
+          'text-color': '#8b0000',
+          'text-size': '30',
+          'text-halo-width': '6',
+          'text-halo-blur': '6',
+          'icon-size': '3'
+        }
+      }]
+    });
+    // map.setStyle({
+    //   "airport-label": {
+    //     'text-color': '#8b0000',
+    //     'text-size': '30',
+    //     'text-halo-width': '6',
+    //     'text-halo-blur': '6',
+    //     'icon-size': '3'
+    //   }
+    // });
+
+    var style = map.getStyle();
+    var layers = style.layers;
+    // debugger;
+    // console.log(layers.map(layer => [layer.id, layer.type]));
+  });
+
+  map.on('click', function () {
+    map.flyTo({
+      center: [-77.186587, 38.895939],
+      zoom: 17
+    });
+  });
+
+  window.map = map;
+});
 
 /***/ })
 /******/ ]);
