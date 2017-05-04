@@ -600,52 +600,66 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    map.setPaintProperty('water', 'fill-color', '#D4AF37');
-    map.setPaintProperty('sand', 'fill-color', '#00FFFF');
-    map.setPaintProperty('building', 'fill-color', '#FF9933');
-    map.setPaintProperty("road-primary", 'line-color', '#FF9933');
-    map.setStyle({
-      "version": 8,
-      "layers": [{
-        "id": "water-label",
-        "type": "symbol",
-        "source": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
-        "paint": {
-          'text-color': '#8b0000'
-        }
-      }, {
-        "id": "airport-label",
-        "type": "symbol",
-        "paint": {
-          'text-color': '#8b0000',
-          'text-size': '30',
-          'text-halo-width': '6',
-          'text-halo-blur': '6',
-          'icon-size': '3'
-        }
-      }]
+    map.addLayer({
+      id: 'mars-satellite',
+      type: 'fill',
+      source: {
+        'source-layer': 'mars-satellite',
+        type: 'vector',
+        url: 'mapbox://mapbox.mars-satellite'
+      }
     });
-    // map.setStyle({
-    //   "airport-label": {
-    //     'text-color': '#8b0000',
-    //     'text-size': '30',
-    //     'text-halo-width': '6',
-    //     'text-halo-blur': '6',
-    //     'icon-size': '3'
-    //   }
+    //
+    //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
+    //   map.setPaintProperty('sand', 'fill-color', '#00FFFF');
+    //   map.setPaintProperty('building', 'fill-color', '#FF9933');
+    //   map.setPaintProperty("road-primary", 'line-color', '#FF9933');
+    //   map.setStyle({
+    //     "version": 8,
+    //     "layers": [
+    //       {
+    //         "id": "water-label",
+    //         "type": "symbol",
+    //         "source": "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+    //         "paint": {
+    //           'text-color': '#8b0000'
+    //         }
+    //       },
+    //       {
+    //         "id": "airport-label",
+    //         "type": "symbol",
+    //         "paint": {
+    //           'text-color': '#8b0000',
+    //           'text-size': '30',
+    //           'text-halo-width': '6',
+    //           'text-halo-blur': '6',
+    //           'icon-size': '3'
+    //         }
+    //       }
+    //     ]
+    //   });
+    //   // map.setStyle({
+    //   //   "airport-label": {
+    //   //     'text-color': '#8b0000',
+    //   //     'text-size': '30',
+    //   //     'text-halo-width': '6',
+    //   //     'text-halo-blur': '6',
+    //   //     'icon-size': '3'
+    //   //   }
+    //   // });
+    //
+    //   let style = map.getStyle();
+    //   let layers = style.layers;
+    //   // debugger;
+    //   // console.log(layers.map(layer => [layer.id, layer.type]));
     // });
-
-    var style = map.getStyle();
-    var layers = style.layers;
-    // debugger;
-    // console.log(layers.map(layer => [layer.id, layer.type]));
-  });
-
-  map.on('click', function () {
-    map.flyTo({
-      center: [-77.186587, 38.895939],
-      zoom: 17
-    });
+    //
+    // map.on('click', () => {
+    //   map.flyTo({
+    //     center: [-77.186587, 38.895939],
+    //     zoom: 17
+    //   });
+    // });
   });
 
   window.map = map;
