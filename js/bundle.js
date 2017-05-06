@@ -600,7 +600,7 @@ window.addEventListener("DOMContentLoaded", function () {
         }
       },
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{name} ({id})",
         "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
         "text-offset": [0, 0.6],
         "text-anchor": "top"
