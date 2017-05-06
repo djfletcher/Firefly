@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
-import { domestic } from './routes';
+import { domesticCodes, internationalCodes } from './routes';
 import { fetchCoords } from './geocoding_api';
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -12,10 +12,9 @@ window.addEventListener("DOMContentLoaded", () => {
     scrollZoom: true
   });
 
-  const getAirports = () => {
+  const getAirports = codes => {
     let airports = [];
-    window.airports = airports;
-    domestic.forEach(a => fetchCoords(a, airports));
+    codes.forEach(code => fetchCoords(code, airports));
     return airports;
   };
 
@@ -109,16 +108,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
   map.on("load", () => {
     sanitizeMap(map);
-    let airports = getAirports();
+    let domestic = getAirports(domesticCodes);
+    // let international = getAirports(internationalCodes);
     window.setTimeout(() => {
-      drawAirports(airports);
-      let routes = getRoutes(airports);
-      drawRoutes(routes);
+      drawAirports(domestic);
+      // drawAirports(international);
+      let domesticRoutes = getRoutes(domestic);
+      // let internationalRoutes = getRoutes(international);
+      drawRoutes(domesticRoutes);
+      // drawRoutes(internationalRoutes);
     }, 2000);
   });
 
   window.map = map;
-  window.fetchCoords = fetchCoords;
 
   // map.addLayer({
   //   id: 'terrain-data',

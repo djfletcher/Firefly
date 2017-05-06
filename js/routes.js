@@ -1,5 +1,5 @@
 // Source: http://www.flysfo.com/media/facts-statistics/north-america-routes
-export const domestic = [
+export const domesticCodes = [
   {
     'id': 'ABQ',
     'name':	'Albuquerque, NM'
@@ -205,10 +205,6 @@ export const domestic = [
     'name': "Oklahoma City, OK"
   },
   {
-    'id': 'ONT',
-    'name': "Ontario, CA"
-  },
-  {
     'id': 'ORD',
     'name': "Chicago-O'Hare, IL"
   },
@@ -281,10 +277,6 @@ export const domestic = [
     'name': "Seattle/Tacoma, WA"
   },
   {
-    'id': 'SJD',
-    'name': "San Jose Cabo, MEX"
-  },
-  {
     'id': 'SLC',
     'name': "Salt Lake City, UT"
   },
@@ -319,57 +311,213 @@ export const domestic = [
 ];
 
 // Source: https://www.flysfo.com/media/facts-statistics/international-routes
-// export const international = {
-//   AKL	Auckland, NZ
-//   AMS	Amsterdam, NL
-//   AUH	Abu Dhabi, AE
-//   BLR	Bangalore, IN (via New Dehli)
-//   CAN	Guangzhou, CN
-//   CDG	Paris-De Gaulle, FR
-//   CKG	Chongqing, CN (via Beijing)
-//   CPH	Copenhagen, DK
-//   CTU	Chengdu, CN
-//   CUN	Cancun, MX
-//   DEL	Delhi, IN
-//   DUB	Dublin, IE
-//   DUS	Dusseldorf, DE
-//   DXB	Dubai, AE
-//   FRA	Frankfurt, DE
-//   GDL	Guadalajara, MX
-//   HEL	Helsinki, FI
-//   HGH	Hangzhou, CN
-//   HKG	Hong Kong, HK
-//   HND	Tokyo-Haneda, JP
-//   ICN	Seoul-Incheon, KR
-//   IST	Istanbul, TR
-//   KEF	Keflavik, IS
-//   KIX	Osaka-Kansai, JP
-//   LHR	London-Heathrow, EN, GB
-//   MAN	Manchester, EN, GB
-//   MEX	Mexico City, MX
-//   MNL	Manila, PH
-//   MUC	Munich, DE
-//   NAN	Nadi, FJ
-//   NRT	Tokyo-Narita, JP
-//   PEK	Beijing, CN
-//   PTY	Panama City, PA
-//   PVG	Shanghai, CN
-//   PVR	Puerto Vallarta, MX
-//   SAL	San Salvador, SV
-//   SIN	Singapore, SG
-//   SJD	San Jose Cabo, MX
-//   SYD	Sydney, NS, AU
-//   TAO	Qingdao, CN
-//   TLV	Tel Aviv, IL
-//   TPE	Taipei, TW
-//   TXL	Berlin, DE
-//   WUH	Wuhan, CN
-//   XIY	Xi'an, CN
-//   YEG	Edmonton, AB, CA
-//   YUL	Montreal-PET, QC, CA
-//   YVR	Vancouver, BC, CA
-//   YYC	Calgary, AB, CA
-//   YYJ	Victoria, BC, CA
-//   YYZ	Toronto, ON, CA
-//   ZRH	Zurich, CH
-// };
+export const internationalCodes = [
+  {
+    "id": "AKL",
+    "name": "Auckland, NZ"
+  },
+  {
+    "id": "AMS",
+    "name": "Amsterdam, NL"
+  },
+  {
+    "id": "AUH",
+    "name": "Abu Dhabi, AE"
+  },
+  {
+    "id": "BLR",
+    "name": "Bangalore, IN"
+  },
+  {
+    "id": "CAN",
+    "name": "Guangzhou, CN"
+  },
+  {
+    "id": "CDG",
+    "name": "Paris-De Gaulle, FR"
+  },
+  {
+    "id": "CKG",
+    "name": "Chongqing, CN"
+  },
+  {
+    "id": "CPH",
+    "name": "Copenhagen, DK"
+  },
+  {
+    "id": "CTU",
+    "name": "Chengdu, CN"
+  },
+  {
+    "id": "CUN",
+    "name": "Cancun, MX"
+  },
+  {
+    "id": "DEL",
+    "name": "Delhi, IN"
+  },
+  {
+    "id": "DUB",
+    "name": "Dublin, IE"
+  },
+  {
+    "id": "DUS",
+    "name": "Dusseldorf, DE"
+  },
+  {
+    "id": "DXB",
+    "name": "Dubai, AE"
+  },
+  {
+    "id": "FRA",
+    "name": "Frankfurt, DE"
+  },
+  {
+    "id": "GDL",
+    "name": "Guadalajara, MX"
+  },
+  {
+    "id": "HEL",
+    "name": "Helsinki, FI"
+  },
+  {
+    "id": "HGH",
+    "name": "Hangzhou, CN"
+  },
+  {
+    "id": "HKG",
+    "name": "Hong Kong, HK"
+  },
+  {
+    "id": "HND",
+    "name": "Tokyo-Haneda, JP"
+  },
+  {
+    "id": "ICN",
+    "name": "Seoul-Incheon, KR"
+  },
+  {
+    "id": "IST",
+    "name": "Istanbul, TR"
+  },
+  {
+    "id": "KEF",
+    "name": "Keflavik, IS"
+  },
+  {
+    "id": "KIX",
+    "name": "Osaka-Kansai, JP"
+  },
+  {
+    "id": "LHR",
+    "name": "London-Heathrow, EN, GB"
+  },
+  {
+    "id": "MAN",
+    "name": "Manchester, EN, GB"
+  },
+  {
+    "id": "MEX",
+    "name": "Mexico City, MX"
+  },
+  {
+    "id": "MNL",
+    "name": "Manila, PH"
+  },
+  {
+    "id": "MUC",
+    "name": "Munich, DE"
+  },
+  {
+    "id": "NAN",
+    "name": "Nadi, FJ"
+  },
+  {
+    "id": "NRT",
+    "name": "Tokyo-Narita, JP"
+  },
+  {
+    "id": "PEK",
+    "name": "Beijing, CN"
+  },
+  {
+    "id": "PTY",
+    "name": "Panama City, PA"
+  },
+  {
+    "id": "PVG",
+    "name": "Shanghai, CN"
+  },
+  {
+    "id": "PVR",
+    "name": "Puerto Vallarta, MX"
+  },
+  {
+    "id": "SAL",
+    "name": "San Salvador, SV"
+  },
+  {
+    "id": "SIN",
+    "name": "Singapore, SG"
+  },
+  {
+    "id": "SJD",
+    "name": "San Jose Cabo, MX"
+  },
+  {
+    "id": "SYD",
+    "name": "Sydney, NS, AU"
+  },
+  {
+    "id": "TAO",
+    "name": "Qingdao, CN"
+  },
+  {
+    "id": "TLV",
+    "name": "Tel Aviv, IL"
+  },
+  {
+    "id": "TPE",
+    "name": "Taipei, TW"
+  },
+  {
+    "id": "TXL",
+    "name": "Berlin, DE"
+  },
+  {
+    "id": "WUH",
+    "name": "Wuhan, CN"
+  },
+  {
+    "id": "XIY",
+    "name": "Xi'an, CN"
+  },
+  {
+    "id": "YEG",
+    "name": "Edmonton, AB, CA"
+  },
+  {
+    "id": "YUL",
+    "name": "Montreal-PET, QC, CA"
+  },
+  {
+    "id": "YVR",
+    "name": "Vancouver, BC, CA"
+  },
+  {
+    "id": "YYC",
+    "name": "Calgary, AB, CA"
+  },
+  {
+    "id": "YYJ",
+    "name": "Victoria, BC, CA"
+  },
+  {
+    "id": "YYZ",
+    "name": "Toronto, ON, CA"
+  },
+  {
+    "id": "ZRH",
+    "name": "Zurich, CH"
+  }
+];
