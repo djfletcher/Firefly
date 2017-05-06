@@ -20,10 +20,9 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
 
+  const airportsCollection = collectAirports();
 
-  map.on('load', () => {
-    const airportsCollection = collectAirports();
-
+  map.on('click', () => {
     map.addLayer({
       "id": "points",
       "type": "symbol",
@@ -42,9 +41,11 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    console.log(airportsCollection.length);
     window.airportsCollection = airportsCollection;
   });
 
+  console.log(airportsCollection.length);
   window.map = map;
   window.fetchCoords = fetchCoords;
   // map.addLayer({

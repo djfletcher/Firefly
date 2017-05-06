@@ -585,9 +585,9 @@ window.addEventListener("DOMContentLoaded", function () {
     scrollZoom: true
   });
 
-  map.on('load', function () {
-    var airportsCollection = collectAirports();
+  var airportsCollection = collectAirports();
 
+  map.on('click', function () {
     map.addLayer({
       "id": "points",
       "type": "symbol",
@@ -606,9 +606,11 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     });
 
+    console.log(airportsCollection.length);
     window.airportsCollection = airportsCollection;
   });
 
+  console.log(airportsCollection.length);
   window.map = map;
   window.fetchCoords = _geocoding_api.fetchCoords;
   // map.addLayer({
