@@ -563,45 +563,17 @@ var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 
 var _routes = __webpack_require__(3);
 
+var _geocoding_api = __webpack_require__(4);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var airports = [];
-
-var fetchCoords = function fetchCoords(airport) {
-  var airportId = airport.id;
-  $.ajax({
-    method: 'GET',
-    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airportId + '.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + '&types=poi&country=us',
-    success: function success(r) {
-      airport['geometry'] = r.features[0].geometry;
-      airports.push(airport);
-    }
+var collectAirports = function collectAirports() {
+  var airportsCollection = [];
+  _routes.domestic.forEach(function (a) {
+    return (0, _geocoding_api.fetchCoords)(a, airportsCollection);
   });
+  return airportsCollection;
 };
-
-[{
-  'id': 'ABQ',
-  'name': 'Albuquerque, NM'
-}, {
-  'id': 'ACV',
-  'name': 'Eureka, CA'
-}, {
-  'id': 'ANC',
-  'name': 'Anchorage, AK'
-}].forEach(function (a) {
-  return fetchCoords(a);
-});
-
-// const airports = domestic.map(a => {
-//   let geometry = fetchCoords(a.id);
-//   a['geometry'] = geometry;
-//   return a;
-// });
-
-console.log(airports);
-
-window.fetchCoords = fetchCoords;
-window.airports = airports;
 
 window.addEventListener("DOMContentLoaded", function () {
   _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
@@ -613,20 +585,44 @@ window.addEventListener("DOMContentLoaded", function () {
     scrollZoom: true
   });
 
-  map.on('load', function () {});
+  map.on('load', function () {
+    var airportsCollection = collectAirports();
 
-  map.addLayer({
-    id: 'terrain-data',
-    type: 'line',
-    source: {
-      type: 'vector',
-      url: 'mapbox://mapbox.mapbox-terrain-v2'
-    },
-    'source-layer': 'contour',
-    "paint": {
-      "line-color": "#32cd32"
-    }
+    map.addLayer({
+      "id": "points",
+      "type": "symbol",
+      "source": {
+        "type": "geojson",
+        "data": {
+          "type": "FeatureCollection",
+          "features": airportsCollection
+        }
+      },
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+        "text-offset": [0, 0.6],
+        "text-anchor": "top"
+      }
+    });
+
+    window.airportsCollection = airportsCollection;
   });
+
+  window.map = map;
+  window.fetchCoords = _geocoding_api.fetchCoords;
+  // map.addLayer({
+  //   id: 'terrain-data',
+  //   type: 'line',
+  //   source: {
+  //     type: 'vector',
+  //     url: 'mapbox://mapbox.mapbox-terrain-v2'
+  //   },
+  //   'source-layer': 'contour',
+  //   "paint": {
+  //     "line-color": "#32cd32"
+  //   }
+  // });
   // //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
   // //   map.setPaintProperty('sand', 'fill-color', '#00FFFF');
   // //   map.setPaintProperty('building', 'fill-color', '#FF9933');
@@ -637,8 +633,6 @@ window.addEventListener("DOMContentLoaded", function () {
   // //   // debugger;
   // //   // console.log(layers.map(layer => [layer.id, layer.type]));
   // // });
-
-  window.map = map;
 });
 
 /***/ }),
@@ -946,6 +940,31 @@ var domestic = exports.domestic = [{
 //   YYZ	Toronto, ON, CA
 //   ZRH	Zurich, CH
 // };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var fetchCoords = exports.fetchCoords = function fetchCoords(airport, airportsCollection) {
+  var airportId = airport.id;
+  $.ajax({
+    method: 'GET',
+    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airportId + '.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + '&types=poi&country=us',
+    success: function success(r) {
+      var geoJson = {};
+      geoJson['geometry'] = r.features[0].geometry;
+      geoJson['type'] = 'Feature';
+      geoJson['properties'] = airport;
+      airportsCollection.push(geoJson);
+    }
+  });
+};
 
 /***/ })
 /******/ ]);

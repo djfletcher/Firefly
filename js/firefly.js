@@ -1,47 +1,13 @@
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import { domestic } from './routes';
+import { fetchCoords } from './geocoding_api';
 
-let airports = [];
 
-const fetchCoords = airport => {
-  let airportId = airport.id;
-  $.ajax({
-    method: 'GET',
-    url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${airportId}.json?`
-          + `access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g`
-          + `&types=poi&country=us`,
-    success: function(r) {
-      airport['geometry'] = r.features[0].geometry;
-      airports.push(airport);
-    }
-  });
+const collectAirports = () => {
+  let airportsCollection = [];
+  domestic.forEach(a => fetchCoords(a, airportsCollection));
+  return airportsCollection;
 };
-
-[
-  {
-    'id': 'ABQ',
-    'name':	'Albuquerque, NM'
-  },
-  {
-    'id': 'ACV',
-    'name':	'Eureka, CA'
-  },
-  {
-    'id': 'ANC',
-    'name':	'Anchorage, AK'
-  }
-].forEach(a => fetchCoords(a));
-
-// const airports = domestic.map(a => {
-//   let geometry = fetchCoords(a.id);
-//   a['geometry'] = geometry;
-//   return a;
-// });
-
-console.log(airports);
-
-window.fetchCoords = fetchCoords;
-window.airports = airports;
 
 window.addEventListener("DOMContentLoaded", () => {
   mapboxgl.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
@@ -56,21 +22,43 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
   map.on('load', () => {
+    const airportsCollection = collectAirports();
 
+    map.addLayer({
+      "id": "points",
+      "type": "symbol",
+      "source": {
+        "type": "geojson",
+        "data": {
+          "type": "FeatureCollection",
+          "features": airportsCollection
+        }
+      },
+      "layout": {
+        "text-field": "{name}",
+        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+        "text-offset": [0, 0.6],
+        "text-anchor": "top"
+      }
+    });
+
+    window.airportsCollection = airportsCollection;
   });
 
-  map.addLayer({
-    id: 'terrain-data',
-    type: 'line',
-    source: {
-      type: 'vector',
-      url: 'mapbox://mapbox.mapbox-terrain-v2'
-    },
-    'source-layer': 'contour',
-    "paint": {
-      "line-color": "#32cd32"
-    }
-  });
+  window.map = map;
+  window.fetchCoords = fetchCoords;
+  // map.addLayer({
+  //   id: 'terrain-data',
+  //   type: 'line',
+  //   source: {
+  //     type: 'vector',
+  //     url: 'mapbox://mapbox.mapbox-terrain-v2'
+  //   },
+  //   'source-layer': 'contour',
+  //   "paint": {
+  //     "line-color": "#32cd32"
+  //   }
+  // });
   // //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
   // //   map.setPaintProperty('sand', 'fill-color', '#00FFFF');
   // //   map.setPaintProperty('building', 'fill-color', '#FF9933');
@@ -81,6 +69,4 @@ window.addEventListener("DOMContentLoaded", () => {
   // //   // debugger;
   // //   // console.log(layers.map(layer => [layer.id, layer.type]));
   // // });
-
-  window.map = map;
 });
