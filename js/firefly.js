@@ -41,7 +41,11 @@ window.addEventListener("DOMContentLoaded", () => {
     return airports;
   };
 
-  collectAirports();
+  map.on("load", () => {
+    sanitizeMap(map);
+    collectAirports();
+  });
+
   window.map = map;
   window.fetchCoords = fetchCoords;
 
@@ -68,3 +72,19 @@ window.addEventListener("DOMContentLoaded", () => {
   // //   // console.log(layers.map(layer => [layer.id, layer.type]));
   // // });
 });
+
+const sanitizeMap = map => {
+  map.removeLayer("airport-label");
+  map.removeLayer("place-town");
+  map.removeLayer("place-city-sm");
+  map.removeLayer("place-city-md-s");
+  map.removeLayer("place-city-md-n");
+  map.removeLayer("place-city-lg-s");
+  map.removeLayer("place-city-lg-n");
+  map.removeLayer("state-label-sm");
+  map.removeLayer("state-label-md");
+  map.removeLayer("state-label-lg");
+  map.removeLayer("country-label-sm");
+  map.removeLayer("country-label-md");
+  map.removeLayer("country-label-lg");
+};

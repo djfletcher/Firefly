@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -521,125 +521,35 @@ module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","
 
 
 //# sourceMappingURL=mapbox-gl.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _mapboxGl = __webpack_require__(0);
-
-var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
-
-var _routes = __webpack_require__(3);
-
-var _geocoding_api = __webpack_require__(4);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-window.addEventListener("DOMContentLoaded", function () {
-  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
-  var map = new _mapboxGl2.default.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v9',
-    center: [-97.0000, 38.0000],
-    zoom: 3.7,
-    scrollZoom: true
-  });
-
-  var collectAirports = function collectAirports() {
-    var airports = [];
-    window.airports = airports;
-    _routes.domestic.forEach(function (a) {
-      return (0, _geocoding_api.fetchCoords)(a, airports);
-    });
-    window.setTimeout(function () {
-      return drawAirports(airports);
-    }, 2000);
-  };
-
-  var drawAirports = function drawAirports(airports) {
-    map.addLayer({
-      "id": "points",
-      "type": "symbol",
-      "source": {
-        "type": "geojson",
-        "data": {
-          "type": "FeatureCollection",
-          "features": airports
-        }
-      },
-      "layout": {
-        "text-field": "{name} ({id})",
-        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-        "text-offset": [0, 0.6],
-        "text-anchor": "top"
-      }
-    });
-
-    return airports;
-  };
-
-  collectAirports();
-  window.map = map;
-  window.fetchCoords = _geocoding_api.fetchCoords;
-
-  // map.addLayer({
-  //   id: 'terrain-data',
-  //   type: 'line',
-  //   source: {
-  //     type: 'vector',
-  //     url: 'mapbox://mapbox.mapbox-terrain-v2'
-  //   },
-  //   'source-layer': 'contour',
-  //   "paint": {
-  //     "line-color": "#32cd32"
-  //   }
-  // });
-  // //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
-  // //   map.setPaintProperty('sand', 'fill-color', '#00FFFF');
-  // //   map.setPaintProperty('building', 'fill-color', '#FF9933');
-  // //   map.setPaintProperty("road-primary", 'line-color', '#FF9933');
-
-  // //   let style = map.getStyle();
-  // //   let layers = style.layers;
-  // //   // debugger;
-  // //   // console.log(layers.map(layer => [layer.id, layer.type]));
-  // // });
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+var fetchCoords = exports.fetchCoords = function fetchCoords(airport, airportsCollection) {
+  var airportId = airport.id;
+  $.ajax({
+    method: 'GET',
+    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airportId + '.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + '&types=poi&country=us',
+    success: function success(r) {
+      var geoJson = {};
+      geoJson['geometry'] = r.features[0].geometry;
+      geoJson['type'] = 'Feature';
+      geoJson['properties'] = airport;
+      airportsCollection.push(geoJson);
+    }
+  });
+};
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -945,28 +855,138 @@ var domestic = exports.domestic = [{
 // };
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var fetchCoords = exports.fetchCoords = function fetchCoords(airport, airportsCollection) {
-  var airportId = airport.id;
-  $.ajax({
-    method: 'GET',
-    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airportId + '.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + '&types=poi&country=us',
-    success: function success(r) {
-      var geoJson = {};
-      geoJson['geometry'] = r.features[0].geometry;
-      geoJson['type'] = 'Feature';
-      geoJson['properties'] = airport;
-      airportsCollection.push(geoJson);
-    }
+var _mapboxGl = __webpack_require__(0);
+
+var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
+
+var _routes = __webpack_require__(2);
+
+var _geocoding_api = __webpack_require__(1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.addEventListener("DOMContentLoaded", function () {
+  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
+  var map = new _mapboxGl2.default.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v9',
+    center: [-97.0000, 38.0000],
+    zoom: 3.7,
+    scrollZoom: true
   });
+
+  var collectAirports = function collectAirports() {
+    var airports = [];
+    window.airports = airports;
+    _routes.domestic.forEach(function (a) {
+      return (0, _geocoding_api.fetchCoords)(a, airports);
+    });
+    window.setTimeout(function () {
+      return drawAirports(airports);
+    }, 2000);
+  };
+
+  var drawAirports = function drawAirports(airports) {
+    map.addLayer({
+      "id": "points",
+      "type": "symbol",
+      "source": {
+        "type": "geojson",
+        "data": {
+          "type": "FeatureCollection",
+          "features": airports
+        }
+      },
+      "layout": {
+        "text-field": "{name} ({id})",
+        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+        "text-offset": [0, 0.6],
+        "text-anchor": "top"
+      }
+    });
+
+    return airports;
+  };
+
+  map.on("load", function () {
+    sanitizeMap(map);
+    collectAirports();
+  });
+
+  window.map = map;
+  window.fetchCoords = _geocoding_api.fetchCoords;
+
+  // map.addLayer({
+  //   id: 'terrain-data',
+  //   type: 'line',
+  //   source: {
+  //     type: 'vector',
+  //     url: 'mapbox://mapbox.mapbox-terrain-v2'
+  //   },
+  //   'source-layer': 'contour',
+  //   "paint": {
+  //     "line-color": "#32cd32"
+  //   }
+  // });
+  // //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
+  // //   map.setPaintProperty('sand', 'fill-color', '#00FFFF');
+  // //   map.setPaintProperty('building', 'fill-color', '#FF9933');
+  // //   map.setPaintProperty("road-primary", 'line-color', '#FF9933');
+
+  // //   let style = map.getStyle();
+  // //   let layers = style.layers;
+  // //   // debugger;
+  // //   // console.log(layers.map(layer => [layer.id, layer.type]));
+  // // });
+});
+
+var sanitizeMap = function sanitizeMap(map) {
+  map.removeLayer("airport-label");
+  map.removeLayer("place-town");
+  map.removeLayer("place-city-sm");
+  map.removeLayer("place-city-md-s");
+  map.removeLayer("place-city-md-n");
+  map.removeLayer("place-city-lg-s");
+  map.removeLayer("place-city-lg-n");
+  map.removeLayer("state-label-sm");
+  map.removeLayer("state-label-md");
+  map.removeLayer("state-label-lg");
+  map.removeLayer("country-label-sm");
+  map.removeLayer("country-label-md");
+  map.removeLayer("country-label-lg");
 };
 
 /***/ })
