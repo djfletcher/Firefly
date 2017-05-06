@@ -921,7 +921,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   var drawAirports = function drawAirports(airports) {
     map.addLayer({
-      "id": "points",
+      "id": "airport-names",
       "type": "symbol",
       "source": {
         "type": "geojson",
@@ -931,10 +931,35 @@ window.addEventListener("DOMContentLoaded", function () {
         }
       },
       "layout": {
-        "text-field": "{name} ({id})",
-        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-        "text-offset": [0, 0.6],
-        "text-anchor": "top"
+        "text-field": {
+          "stops": [[3, "{id}"], [8, "{name}"]]
+        },
+        "text-size": 12,
+        "text-offset": {
+          "stops": [[3, [0, 1]], [12, [0, 2]], [20, [0, 4]]]
+        }
+      },
+      "paint": {
+        "text-color": "#4666FF"
+      }
+    });
+
+    map.addLayer({
+      "id": "airports",
+      "type": "circle",
+      "source": {
+        "type": "geojson",
+        "data": {
+          "type": "FeatureCollection",
+          "features": airports
+        }
+      },
+      "paint": {
+        'circle-radius': {
+          'stops': [[4, 4], [10, 15], [22, 60]]
+        },
+        "circle-color": "#4666FF",
+        "circle-blur": 0.2
       }
     });
 
