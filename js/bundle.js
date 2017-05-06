@@ -908,20 +908,33 @@ window.addEventListener("DOMContentLoaded", function () {
     scrollZoom: true
   });
 
-  var collectAirports = function collectAirports() {
+  var getAirports = function getAirports() {
     var airports = [];
     window.airports = airports;
     _routes.domestic.forEach(function (a) {
       return (0, _geocoding_api.fetchCoords)(a, airports);
     });
-    window.setTimeout(function () {
-      return drawAirports(airports);
-    }, 2000);
+    return airports;
+  };
+
+  var getRoutes = function getRoutes(airports) {
+    var routes = [];
+    airports.forEach(function (a) {
+      var geoJson = {};
+      geoJson['type'] = 'Feature';
+      geoJson['geometry'] = {
+        "type": "LineString",
+        "coordinates": [sfo, a.geometry.coordinates]
+      };
+      routes.push(geoJson);
+    });
+
+    return routes;
   };
 
   var drawAirports = function drawAirports(airports) {
     map.addLayer({
-      "id": "airport-names",
+      "id": "domestic-airport-names",
       "type": "symbol",
       "source": {
         "type": "geojson",
@@ -932,9 +945,11 @@ window.addEventListener("DOMContentLoaded", function () {
       },
       "layout": {
         "text-field": {
-          "stops": [[3, "{id}"], [8, "{name}"]]
+          "stops": [[3, "{id}"], [6, "{name}"]]
         },
-        "text-size": 12,
+        "text-size": {
+          "stops": [[3, 14], [8, 20], [16, 30]]
+        },
         "text-offset": {
           "stops": [[3, [0, 1]], [12, [0, 2]], [20, [0, 4]]]
         }
@@ -945,7 +960,7 @@ window.addEventListener("DOMContentLoaded", function () {
     });
 
     map.addLayer({
-      "id": "airports",
+      "id": "domestic-airports",
       "type": "circle",
       "source": {
         "type": "geojson",
@@ -956,7 +971,7 @@ window.addEventListener("DOMContentLoaded", function () {
       },
       "paint": {
         'circle-radius': {
-          'stops': [[4, 4], [10, 15], [22, 60]]
+          'stops': [[4, 4], [10, 15]]
         },
         "circle-color": "#4666FF",
         "circle-blur": 0.2
@@ -966,9 +981,36 @@ window.addEventListener("DOMContentLoaded", function () {
     return airports;
   };
 
+  var drawRoutes = function drawRoutes(routes) {
+    map.addLayer({
+      "id": "domestic-routes",
+      "type": "line",
+      "source": {
+        "type": "geojson",
+        "data": {
+          "type": "FeatureCollection",
+          "features": routes
+        }
+      },
+      "paint": {
+        "line-color": "#4666FF",
+        "line-width": {
+          "stops": [[3, 1], [10, 2], [16, 4]]
+        }
+      }
+    });
+
+    return routes;
+  };
+
   map.on("load", function () {
     sanitizeMap(map);
-    collectAirports();
+    var airports = getAirports();
+    window.setTimeout(function () {
+      drawAirports(airports);
+      var routes = getRoutes(airports);
+      drawRoutes(routes);
+    }, 2000);
   });
 
   window.map = map;
@@ -1013,6 +1055,8 @@ var sanitizeMap = function sanitizeMap(map) {
   map.removeLayer("country-label-md");
   map.removeLayer("country-label-lg");
 };
+
+var sfo = [-122.3790, 37.6213];
 
 /***/ })
 /******/ ]);
