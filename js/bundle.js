@@ -567,14 +567,6 @@ var _geocoding_api = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var collectAirports = function collectAirports() {
-  var airportsCollection = [];
-  _routes.domestic.forEach(function (a) {
-    return (0, _geocoding_api.fetchCoords)(a, airportsCollection);
-  });
-  return airportsCollection;
-};
-
 window.addEventListener("DOMContentLoaded", function () {
   _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
   var map = new _mapboxGl2.default.Map({
@@ -585,9 +577,18 @@ window.addEventListener("DOMContentLoaded", function () {
     scrollZoom: true
   });
 
-  var airportsCollection = collectAirports();
+  var collectAirports = function collectAirports() {
+    var airports = [];
+    window.airports = airports;
+    _routes.domestic.forEach(function (a) {
+      return (0, _geocoding_api.fetchCoords)(a, airports);
+    });
+    window.setTimeout(function () {
+      return drawAirports(airports);
+    }, 2000);
+  };
 
-  map.on('click', function () {
+  var drawAirports = function drawAirports(airports) {
     map.addLayer({
       "id": "points",
       "type": "symbol",
@@ -595,7 +596,7 @@ window.addEventListener("DOMContentLoaded", function () {
         "type": "geojson",
         "data": {
           "type": "FeatureCollection",
-          "features": airportsCollection
+          "features": airports
         }
       },
       "layout": {
@@ -606,13 +607,13 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    console.log(airportsCollection.length);
-    window.airportsCollection = airportsCollection;
-  });
+    return airports;
+  };
 
-  console.log(airportsCollection.length);
+  collectAirports();
   window.map = map;
   window.fetchCoords = _geocoding_api.fetchCoords;
+
   // map.addLayer({
   //   id: 'terrain-data',
   //   type: 'line',

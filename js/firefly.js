@@ -2,13 +2,6 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import { domestic } from './routes';
 import { fetchCoords } from './geocoding_api';
 
-
-const collectAirports = () => {
-  let airportsCollection = [];
-  domestic.forEach(a => fetchCoords(a, airportsCollection));
-  return airportsCollection;
-};
-
 window.addEventListener("DOMContentLoaded", () => {
   mapboxgl.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
   const map = new mapboxgl.Map({
@@ -19,10 +12,14 @@ window.addEventListener("DOMContentLoaded", () => {
     scrollZoom: true
   });
 
+  const collectAirports = () => {
+    let airports = [];
+    window.airports = airports;
+    domestic.forEach(a => fetchCoords(a, airports));
+    window.setTimeout(() => drawAirports(airports), 2000);
+  };
 
-  const airportsCollection = collectAirports();
-
-  map.on('click', () => {
+  const drawAirports = airports => {
     map.addLayer({
       "id": "points",
       "type": "symbol",
@@ -30,7 +27,7 @@ window.addEventListener("DOMContentLoaded", () => {
         "type": "geojson",
         "data": {
           "type": "FeatureCollection",
-          "features": airportsCollection
+          "features": airports
         }
       },
       "layout": {
@@ -41,13 +38,13 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    console.log(airportsCollection.length);
-    window.airportsCollection = airportsCollection;
-  });
+    return airports;
+  };
 
-  console.log(airportsCollection.length);
+  collectAirports();
   window.map = map;
   window.fetchCoords = fetchCoords;
+  
   // map.addLayer({
   //   id: 'terrain-data',
   //   type: 'line',
