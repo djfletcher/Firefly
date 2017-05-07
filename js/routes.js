@@ -70,7 +70,7 @@ export const domesticCodes = [
   },
   {
     'id': 'DCA',
-    'name': "Washington-Reagan, VA"
+    'name': "Ronald Reagan Washington National, VA"
   },
   {
     'id': 'DEN',
@@ -78,7 +78,7 @@ export const domesticCodes = [
   },
   {
     'id': 'DFW',
-    'name': "Dallas/Fort Worth, TX"
+    'name': "Dallas-Fort Worth, TX"
   },
   {
     'id': 'DTW',
@@ -102,15 +102,15 @@ export const domesticCodes = [
   },
   {
     'id': 'HDN',
-    'name': "Hayden/Yampa Valley, CO"
+    'name': "Hayden-Yampa Valley, CO"
   },
   {
     'id': 'HNL',
-    'name': "Honolulu/Oahu, HI"
+    'name': "Honolulu-Oahu, HI"
   },
   {
     'id': 'IAD',
-    'name': "Washington-Dulles, VA"
+    'name': "Washington Dulles International, VA"
   },
   {
     'id': 'IAH',
@@ -146,7 +146,7 @@ export const domesticCodes = [
   },
   {
     'id': 'LIH',
-    'name': "Lihue/Kauai, HI"
+    'name': "Lihue-Kauai, HI"
   },
   {
     'id': 'MCI',
@@ -186,7 +186,7 @@ export const domesticCodes = [
   },
   {
     'id': 'MSP',
-    'name': "Minneapolis/St. Paul, MN"
+    'name': "Minneapolis-St. Paul, MN"
   },
   {
     'id': 'MSY',
@@ -198,7 +198,7 @@ export const domesticCodes = [
   },
   {
     'id': 'OGG',
-    'name': "Kahului/Maui, HI"
+    'name': "Kahului-Maui, HI"
   },
   {
     'id': 'OKC',
@@ -234,7 +234,7 @@ export const domesticCodes = [
   },
   {
     'id': 'PSC',
-    'name': "Pasco/Tri-Cities, WA"
+    'name': "Pasco-Tri-Cities, WA"
   },
   {
     'id': 'PSP',
@@ -274,7 +274,7 @@ export const domesticCodes = [
   },
   {
     'id': 'SEA',
-    'name': "Seattle/Tacoma, WA"
+    'name': "Seattle-Tacoma, WA"
   },
   {
     'id': 'SLC',
@@ -306,7 +306,7 @@ export const domesticCodes = [
   },
   {
     'id': 'XNA',
-    'name': "Northwest Arkansas/Fayetteville, AR"
+    'name': "Northwest Arkansas-Fayetteville, AR"
   }
 ];
 
@@ -410,11 +410,11 @@ export const internationalCodes = [
   },
   {
     "id": "LHR",
-    "name": "London-Heathrow, EN, GB"
+    "name": "London-Heathrow, GB"
   },
   {
     "id": "MAN",
-    "name": "Manchester, EN, GB"
+    "name": "Manchester, GB"
   },
   {
     "id": "MEX",
@@ -466,7 +466,7 @@ export const internationalCodes = [
   },
   {
     "id": "SYD",
-    "name": "Sydney, NS, AU"
+    "name": "Sydney, AU"
   },
   {
     "id": "TAO",
@@ -494,27 +494,27 @@ export const internationalCodes = [
   },
   {
     "id": "YEG",
-    "name": "Edmonton, AB, CA"
+    "name": "Edmonton, CA"
   },
   {
     "id": "YUL",
-    "name": "Montreal-PET, QC, CA"
+    "name": "Montreal-PET, CA"
   },
   {
     "id": "YVR",
-    "name": "Vancouver, BC, CA"
+    "name": "Vancouver, CA"
   },
   {
     "id": "YYC",
-    "name": "Calgary, AB, CA"
+    "name": "Calgary, CA"
   },
   {
     "id": "YYJ",
-    "name": "Victoria, BC, CA"
+    "name": "Victoria, CA"
   },
   {
     "id": "YYZ",
-    "name": "Toronto, ON, CA"
+    "name": "Toronto, CA"
   },
   {
     "id": "ZRH",

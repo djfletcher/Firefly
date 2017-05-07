@@ -1,18 +1,18 @@
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import { domesticCodes, internationalCodes } from './routes';
-import { fetchCoords } from './geocoding_api';
+import { fetchDomesticCoords, fetchIntlCoords } from './geocoding_api';
 
 window.addEventListener("DOMContentLoaded", () => {
   mapboxgl.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
   const map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v9',
+    style: 'mapbox://styles/djfletcher/cj2f01l4s004j2sscj05ny5wb',
     center: [-97.0000, 38.0000],
     zoom: 3.7,
     scrollZoom: true
   });
 
-  const getAirports = codes => {
+  const getAirports = (codes, fetchCoords) => {
     let airports = [];
     codes.forEach(code => fetchCoords(code, airports));
     return airports;
@@ -35,9 +35,9 @@ window.addEventListener("DOMContentLoaded", () => {
     return routes;
   };
 
-  const drawAirports = airports => {
+  const drawAirports = (airports, domicile) => {
     map.addLayer({
-      "id": "domestic-airport-names",
+      "id": `${domicile}-airport-names`,
       "type": "symbol",
       "source": {
         "type": "geojson",
@@ -58,12 +58,12 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       },
       "paint": {
-        "text-color": "#4666FF"
+        "text-color": `${domicile === "domestic" ? "#4666FF" : "#DD0048"}`
       }
     });
 
     map.addLayer({
-      "id": "domestic-airports",
+      "id": `${domicile}-airports`,
       "type": "circle",
       "source": {
         "type": "geojson",
@@ -76,7 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
         'circle-radius': {
           'stops': [[4, 4], [10, 15]]
         },
-        "circle-color": "#4666FF",
+        "circle-color": `${domicile === "domestic" ? "#4666FF" : "#DD0048"}`,
         "circle-blur": 0.2
       }
     });
@@ -84,9 +84,9 @@ window.addEventListener("DOMContentLoaded", () => {
     return airports;
   };
 
-  const drawRoutes = routes => {
+  const drawRoutes = (routes, domicile) => {
     map.addLayer({
-      "id": "domestic-routes",
+      "id": `${domicile}-routes`,
       "type": "line",
       "source": {
         "type": "geojson",
@@ -96,7 +96,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       },
       "paint": {
-        "line-color": "#4666FF",
+        "line-color": `${domicile === "domestic" ? "#4666FF" : "#DD0048"}`,
         "line-width": {
           "stops": [[3, 1], [10, 2], [16, 4]]
         }
@@ -107,16 +107,16 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   map.on("load", () => {
-    sanitizeMap(map);
-    let domestic = getAirports(domesticCodes);
-    // let international = getAirports(internationalCodes);
+    // sanitizeMap(map);
+    let domestic = getAirports(domesticCodes, fetchDomesticCoords);
+    // let international = getAirports(internationalCodes, fetchIntlCoords);
     window.setTimeout(() => {
-      drawAirports(domestic);
-      // drawAirports(international);
+      drawAirports(domestic, "domestic");
+      // drawAirports(international, "international");
       let domesticRoutes = getRoutes(domestic);
       // let internationalRoutes = getRoutes(international);
-      drawRoutes(domesticRoutes);
-      // drawRoutes(internationalRoutes);
+      drawRoutes(domesticRoutes, "domestic");
+      // drawRoutes(internationalRoutes, "international");
     }, 2000);
   });
 

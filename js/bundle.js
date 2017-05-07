@@ -533,12 +533,11 @@ module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var fetchCoords = exports.fetchCoords = function fetchCoords(airport, airportsCollection) {
-  var airportId = airport.id;
+var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCoords(airport, airportsCollection) {
   var country = "us";
   $.ajax({
     method: 'GET',
-    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airportId + '+airport.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + ('&types=poi&language=en&country=' + country),
+    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + ' airport.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + ('&type=poi&language=en&country=' + country),
     success: function success(r) {
       var geoJson = {};
       geoJson['geometry'] = r.features[0].geometry;
@@ -547,7 +546,27 @@ var fetchCoords = exports.fetchCoords = function fetchCoords(airport, airportsCo
       airportsCollection.push(geoJson);
     },
     error: function error(f) {
-      debugger;
+      // debugger;
+    }
+  });
+};
+
+var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport, airportsCollection) {
+  var comma = airport.name.indexOf(',');
+  // Need to slice two indices past comma to get to country name
+  var country = airport.name.slice(comma + 2);
+  $.ajax({
+    method: 'GET',
+    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + '.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + ('&type=poi&language=en&country=' + country),
+    success: function success(r) {
+      var geoJson = {};
+      geoJson['geometry'] = r.features[0].geometry;
+      geoJson['type'] = 'Feature';
+      geoJson['properties'] = airport;
+      airportsCollection.push(geoJson);
+    },
+    error: function error(f) {
+      // debugger;
     }
   });
 };
@@ -616,13 +635,13 @@ var domesticCodes = exports.domesticCodes = [{
   'name': 'Dallas Love, TX'
 }, {
   'id': 'DCA',
-  'name': "Washington-Reagan, VA"
+  'name': "Ronald Reagan Washington National, VA"
 }, {
   'id': 'DEN',
   'name': "Denver, CO"
 }, {
   'id': 'DFW',
-  'name': "Dallas/Fort Worth, TX"
+  'name': "Dallas-Fort Worth, TX"
 }, {
   'id': 'DTW',
   'name': "Detroit, MI"
@@ -640,13 +659,13 @@ var domesticCodes = exports.domesticCodes = [{
   'name': "Fort Lauderdale, FL"
 }, {
   'id': 'HDN',
-  'name': "Hayden/Yampa Valley, CO"
+  'name': "Hayden-Yampa Valley, CO"
 }, {
   'id': 'HNL',
-  'name': "Honolulu/Oahu, HI"
+  'name': "Honolulu-Oahu, HI"
 }, {
   'id': 'IAD',
-  'name': "Washington-Dulles, VA"
+  'name': "Washington Dulles International, VA"
 }, {
   'id': 'IAH',
   'name': "Houston, TX"
@@ -673,7 +692,7 @@ var domesticCodes = exports.domesticCodes = [{
   'name': "Long Beach, CA"
 }, {
   'id': 'LIH',
-  'name': "Lihue/Kauai, HI"
+  'name': "Lihue-Kauai, HI"
 }, {
   'id': 'MCI',
   'name': "Kansas City, MO"
@@ -703,7 +722,7 @@ var domesticCodes = exports.domesticCodes = [{
   'name': "Missoula, MT"
 }, {
   'id': 'MSP',
-  'name': "Minneapolis/St. Paul, MN"
+  'name': "Minneapolis-St. Paul, MN"
 }, {
   'id': 'MSY',
   'name': "New Orleans, LA"
@@ -712,7 +731,7 @@ var domesticCodes = exports.domesticCodes = [{
   'name': "Montrose, CO"
 }, {
   'id': 'OGG',
-  'name': "Kahului/Maui, HI"
+  'name': "Kahului-Maui, HI"
 }, {
   'id': 'OKC',
   'name': "Oklahoma City, OK"
@@ -739,7 +758,7 @@ var domesticCodes = exports.domesticCodes = [{
   'name': "Pittsburgh, PA"
 }, {
   'id': 'PSC',
-  'name': "Pasco/Tri-Cities, WA"
+  'name': "Pasco-Tri-Cities, WA"
 }, {
   'id': 'PSP',
   'name': "Palm Springs, CA"
@@ -769,7 +788,7 @@ var domesticCodes = exports.domesticCodes = [{
   'name': "San Luis Obispo, CA"
 }, {
   'id': 'SEA',
-  'name': "Seattle/Tacoma, WA"
+  'name': "Seattle-Tacoma, WA"
 }, {
   'id': 'SLC',
   'name': "Salt Lake City, UT"
@@ -793,7 +812,7 @@ var domesticCodes = exports.domesticCodes = [{
   'name': "Tucson, AZ"
 }, {
   'id': 'XNA',
-  'name': "Northwest Arkansas/Fayetteville, AR"
+  'name': "Northwest Arkansas-Fayetteville, AR"
 }];
 
 // Source: https://www.flysfo.com/media/facts-statistics/international-routes
@@ -871,10 +890,10 @@ var internationalCodes = exports.internationalCodes = [{
   "name": "Osaka-Kansai, JP"
 }, {
   "id": "LHR",
-  "name": "London-Heathrow, EN, GB"
+  "name": "London-Heathrow, GB"
 }, {
   "id": "MAN",
-  "name": "Manchester, EN, GB"
+  "name": "Manchester, GB"
 }, {
   "id": "MEX",
   "name": "Mexico City, MX"
@@ -913,7 +932,7 @@ var internationalCodes = exports.internationalCodes = [{
   "name": "San Jose Cabo, MX"
 }, {
   "id": "SYD",
-  "name": "Sydney, NS, AU"
+  "name": "Sydney, AU"
 }, {
   "id": "TAO",
   "name": "Qingdao, CN"
@@ -934,22 +953,22 @@ var internationalCodes = exports.internationalCodes = [{
   "name": "Xi'an, CN"
 }, {
   "id": "YEG",
-  "name": "Edmonton, AB, CA"
+  "name": "Edmonton, CA"
 }, {
   "id": "YUL",
-  "name": "Montreal-PET, QC, CA"
+  "name": "Montreal-PET, CA"
 }, {
   "id": "YVR",
-  "name": "Vancouver, BC, CA"
+  "name": "Vancouver, CA"
 }, {
   "id": "YYC",
-  "name": "Calgary, AB, CA"
+  "name": "Calgary, CA"
 }, {
   "id": "YYJ",
-  "name": "Victoria, BC, CA"
+  "name": "Victoria, CA"
 }, {
   "id": "YYZ",
-  "name": "Toronto, ON, CA"
+  "name": "Toronto, CA"
 }, {
   "id": "ZRH",
   "name": "Zurich, CH"
@@ -1003,16 +1022,16 @@ window.addEventListener("DOMContentLoaded", function () {
   _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
   var map = new _mapboxGl2.default.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v9',
+    style: 'mapbox://styles/djfletcher/cj2f01l4s004j2sscj05ny5wb',
     center: [-97.0000, 38.0000],
     zoom: 3.7,
     scrollZoom: true
   });
 
-  var getAirports = function getAirports(codes) {
+  var getAirports = function getAirports(codes, fetchCoords) {
     var airports = [];
     codes.forEach(function (code) {
-      return (0, _geocoding_api.fetchCoords)(code, airports);
+      return fetchCoords(code, airports);
     });
     return airports;
   };
@@ -1032,9 +1051,9 @@ window.addEventListener("DOMContentLoaded", function () {
     return routes;
   };
 
-  var drawAirports = function drawAirports(airports) {
+  var drawAirports = function drawAirports(airports, domicile) {
     map.addLayer({
-      "id": "domestic-airport-names",
+      "id": domicile + '-airport-names',
       "type": "symbol",
       "source": {
         "type": "geojson",
@@ -1055,12 +1074,12 @@ window.addEventListener("DOMContentLoaded", function () {
         }
       },
       "paint": {
-        "text-color": "#4666FF"
+        "text-color": '' + (domicile === "domestic" ? "#4666FF" : "#DD0048")
       }
     });
 
     map.addLayer({
-      "id": "domestic-airports",
+      "id": domicile + '-airports',
       "type": "circle",
       "source": {
         "type": "geojson",
@@ -1073,7 +1092,7 @@ window.addEventListener("DOMContentLoaded", function () {
         'circle-radius': {
           'stops': [[4, 4], [10, 15]]
         },
-        "circle-color": "#4666FF",
+        "circle-color": '' + (domicile === "domestic" ? "#4666FF" : "#DD0048"),
         "circle-blur": 0.2
       }
     });
@@ -1081,9 +1100,9 @@ window.addEventListener("DOMContentLoaded", function () {
     return airports;
   };
 
-  var drawRoutes = function drawRoutes(routes) {
+  var drawRoutes = function drawRoutes(routes, domicile) {
     map.addLayer({
-      "id": "domestic-routes",
+      "id": domicile + '-routes',
       "type": "line",
       "source": {
         "type": "geojson",
@@ -1093,7 +1112,7 @@ window.addEventListener("DOMContentLoaded", function () {
         }
       },
       "paint": {
-        "line-color": "#4666FF",
+        "line-color": '' + (domicile === "domestic" ? "#4666FF" : "#DD0048"),
         "line-width": {
           "stops": [[3, 1], [10, 2], [16, 4]]
         }
@@ -1104,16 +1123,16 @@ window.addEventListener("DOMContentLoaded", function () {
   };
 
   map.on("load", function () {
-    sanitizeMap(map);
-    var domestic = getAirports(_routes.domesticCodes);
-    // let international = getAirports(internationalCodes);
+    // sanitizeMap(map);
+    var domestic = getAirports(_routes.domesticCodes, _geocoding_api.fetchDomesticCoords);
+    // let international = getAirports(internationalCodes, fetchIntlCoords);
     window.setTimeout(function () {
-      drawAirports(domestic);
-      // drawAirports(international);
+      drawAirports(domestic, "domestic");
+      // drawAirports(international, "international");
       var domesticRoutes = getRoutes(domestic);
       // let internationalRoutes = getRoutes(international);
-      drawRoutes(domesticRoutes);
-      // drawRoutes(internationalRoutes);
+      drawRoutes(domesticRoutes, "domestic");
+      // drawRoutes(internationalRoutes, "international");
     }, 2000);
   });
 
