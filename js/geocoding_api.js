@@ -12,9 +12,6 @@ export const fetchDomesticCoords = (airport, airportsCollection) => {
       geoJson['properties'] = airport;
       airportsCollection.push(geoJson);
     },
-    error: function(f) {
-      // debugger;
-    }
   });
 };
 
@@ -35,7 +32,7 @@ export const fetchIntlCoords = (airport, airportsCollection) => {
       airportsCollection.push(geoJson);
     },
     error: function(f) {
-      // debugger;
+      debugger;
     }
   });
 };

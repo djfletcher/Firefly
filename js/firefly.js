@@ -109,14 +109,14 @@ window.addEventListener("DOMContentLoaded", () => {
   map.on("load", () => {
     // sanitizeMap(map);
     let domestic = getAirports(domesticCodes, fetchDomesticCoords);
-    // let international = getAirports(internationalCodes, fetchIntlCoords);
+    let international = getAirports(internationalCodes, fetchIntlCoords);
     window.setTimeout(() => {
       drawAirports(domestic, "domestic");
-      // drawAirports(international, "international");
+      drawAirports(international, "international");
       let domesticRoutes = getRoutes(domestic);
-      // let internationalRoutes = getRoutes(international);
+      let internationalRoutes = getRoutes(international);
       drawRoutes(domesticRoutes, "domestic");
-      // drawRoutes(internationalRoutes, "international");
+      drawRoutes(internationalRoutes, "international");
     }, 2000);
   });
 

@@ -544,9 +544,6 @@ var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCo
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
       airportsCollection.push(geoJson);
-    },
-    error: function error(f) {
-      // debugger;
     }
   });
 };
@@ -566,7 +563,7 @@ var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport
       airportsCollection.push(geoJson);
     },
     error: function error(f) {
-      // debugger;
+      debugger;
     }
   });
 };
@@ -1125,14 +1122,14 @@ window.addEventListener("DOMContentLoaded", function () {
   map.on("load", function () {
     // sanitizeMap(map);
     var domestic = getAirports(_routes.domesticCodes, _geocoding_api.fetchDomesticCoords);
-    // let international = getAirports(internationalCodes, fetchIntlCoords);
+    var international = getAirports(_routes.internationalCodes, _geocoding_api.fetchIntlCoords);
     window.setTimeout(function () {
       drawAirports(domestic, "domestic");
-      // drawAirports(international, "international");
+      drawAirports(international, "international");
       var domesticRoutes = getRoutes(domestic);
-      // let internationalRoutes = getRoutes(international);
+      var internationalRoutes = getRoutes(international);
       drawRoutes(domesticRoutes, "domestic");
-      // drawRoutes(internationalRoutes, "international");
+      drawRoutes(internationalRoutes, "international");
     }, 2000);
   });
 
