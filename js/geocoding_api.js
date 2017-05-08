@@ -27,6 +27,10 @@ export const fetchIntlCoords = (airport, airportsCollection) => {
     success: function(r) {
       let geoJson = {};
       geoJson['geometry'] = r.features[0].geometry;
+      // If airport is in asia, draw coordinates west of SF instead of east
+      if (geoJson.geometry.coordinates[0] > 40) {
+        geoJson.geometry.coordinates[0] -= 360;
+      }
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
       airportsCollection.push(geoJson);

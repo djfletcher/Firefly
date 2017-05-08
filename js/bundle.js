@@ -558,6 +558,10 @@ var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport
     success: function success(r) {
       var geoJson = {};
       geoJson['geometry'] = r.features[0].geometry;
+      // If airport is in asia, draw coordinates west of SF instead of east
+      if (geoJson.geometry.coordinates[0] > 40) {
+        geoJson.geometry.coordinates[0] -= 360;
+      }
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
       airportsCollection.push(geoJson);
