@@ -533,7 +533,7 @@ module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCoords(airport, airportsCollection) {
+var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCoords(airport, airports, draw) {
   var country = "us";
   $.ajax({
     method: 'GET',
@@ -543,12 +543,16 @@ var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCo
       geoJson['geometry'] = r.features[0].geometry;
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
-      airportsCollection.push(geoJson);
+      airports.push(geoJson);
+      // Draw domestic routes after they've all been fetched
+      if (airports.length === 77) {
+        draw(airports, "domestic");
+      }
     }
   });
 };
 
-var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport, airportsCollection) {
+var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport, airports, draw) {
   var comma = airport.name.indexOf(',');
   // Need to slice two indices past comma to get to country name
   var country = airport.name.slice(comma + 2);
@@ -564,10 +568,11 @@ var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport
       }
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
-      airportsCollection.push(geoJson);
-    },
-    error: function error(f) {
-      debugger;
+      airports.push(geoJson);
+      // Draw international routes after they've all been fetched
+      if (airports.length === 52) {
+        draw(airports, "international");
+      }
     }
   });
 };
@@ -1029,10 +1034,10 @@ window.addEventListener("DOMContentLoaded", function () {
     scrollZoom: true
   });
 
-  var getAirports = function getAirports(codes, fetchCoords) {
+  var getAirports = function getAirports(codes, fetchCoords, draw) {
     var airports = [];
     codes.forEach(function (code) {
-      return fetchCoords(code, airports);
+      return fetchCoords(code, airports, draw);
     });
     return airports;
   };
@@ -1123,62 +1128,21 @@ window.addEventListener("DOMContentLoaded", function () {
     return routes;
   };
 
+  var draw = function draw(airports, domicile) {
+    drawAirports(airports, domicile);
+    var routes = getRoutes(airports);
+    drawRoutes(routes, domicile);
+  };
+
   map.on("load", function () {
-    // sanitizeMap(map);
-    var domestic = getAirports(_routes.domesticCodes, _geocoding_api.fetchDomesticCoords);
-    var international = getAirports(_routes.internationalCodes, _geocoding_api.fetchIntlCoords);
-    window.setTimeout(function () {
-      drawAirports(domestic, "domestic");
-      drawAirports(international, "international");
-      var domesticRoutes = getRoutes(domestic);
-      var internationalRoutes = getRoutes(international);
-      drawRoutes(domesticRoutes, "domestic");
-      drawRoutes(internationalRoutes, "international");
-    }, 2000);
+    // Need to pass #draw as a callback to geocoding api call so that airports
+    // and routes can be drawn only after they are all fetched
+    var domestic = getAirports(_routes.domesticCodes, _geocoding_api.fetchDomesticCoords, draw);
+    var international = getAirports(_routes.internationalCodes, _geocoding_api.fetchIntlCoords, draw);
   });
 
   window.map = map;
-  window.fetchIntlCoords = _geocoding_api.fetchIntlCoords;
-
-  // map.addLayer({
-  //   id: 'terrain-data',
-  //   type: 'line',
-  //   source: {
-  //     type: 'vector',
-  //     url: 'mapbox://mapbox.mapbox-terrain-v2'
-  //   },
-  //   'source-layer': 'contour',
-  //   "paint": {
-  //     "line-color": "#32cd32"
-  //   }
-  // });
-  // //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
-  // //   map.setPaintProperty('sand', 'fill-color', '#00E5EE');
-  // //   map.setPaintProperty('building', 'fill-color', '#FF9933');
-  // //   map.setPaintProperty("road-primary", 'line-color', '#FF9933');
-
-  // //   let style = map.getStyle();
-  // //   let layers = style.layers;
-  // //   // debugger;
-  // //   // console.log(layers.map(layer => [layer.id, layer.type]));
-  // // });
 });
-
-var sanitizeMap = function sanitizeMap(map) {
-  map.removeLayer("airport-label");
-  map.removeLayer("place-town");
-  map.removeLayer("place-city-sm");
-  map.removeLayer("place-city-md-s");
-  map.removeLayer("place-city-md-n");
-  map.removeLayer("place-city-lg-s");
-  map.removeLayer("place-city-lg-n");
-  map.removeLayer("state-label-sm");
-  map.removeLayer("state-label-md");
-  map.removeLayer("state-label-lg");
-  map.removeLayer("country-label-sm");
-  map.removeLayer("country-label-md");
-  map.removeLayer("country-label-lg");
-};
 
 var sfo = [-122.3790, 37.6213];
 

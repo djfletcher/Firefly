@@ -1,4 +1,4 @@
-export const fetchDomesticCoords = (airport, airportsCollection) => {
+export const fetchDomesticCoords = (airport, airports, draw) => {
   let country = "us";
   $.ajax({
     method: 'GET',
@@ -10,12 +10,16 @@ export const fetchDomesticCoords = (airport, airportsCollection) => {
       geoJson['geometry'] = r.features[0].geometry;
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
-      airportsCollection.push(geoJson);
+      airports.push(geoJson);
+      // Draw domestic routes after they've all been fetched
+      if (airports.length === 77) {
+        draw(airports, "domestic");
+      }
     },
   });
 };
 
-export const fetchIntlCoords = (airport, airportsCollection) => {
+export const fetchIntlCoords = (airport, airports, draw) => {
   let comma = airport.name.indexOf(',');
   // Need to slice two indices past comma to get to country name
   let country = airport.name.slice(comma + 2);
@@ -33,10 +37,11 @@ export const fetchIntlCoords = (airport, airportsCollection) => {
       }
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
-      airportsCollection.push(geoJson);
-    },
-    error: function(f) {
-      debugger;
+      airports.push(geoJson);
+      // Draw international routes after they've all been fetched
+      if (airports.length === 52) {
+        draw(airports, "international");
+      }
     }
   });
 };

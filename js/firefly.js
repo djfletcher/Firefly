@@ -12,9 +12,9 @@ window.addEventListener("DOMContentLoaded", () => {
     scrollZoom: true
   });
 
-  const getAirports = (codes, fetchCoords) => {
+  const getAirports = (codes, fetchCoords, draw) => {
     let airports = [];
-    codes.forEach(code => fetchCoords(code, airports));
+    codes.forEach(code => fetchCoords(code, airports, draw));
     return airports;
   };
 
@@ -106,61 +106,20 @@ window.addEventListener("DOMContentLoaded", () => {
     return routes;
   };
 
+  const draw = (airports, domicile) => {
+    drawAirports(airports, domicile);
+    let routes = getRoutes(airports);
+    drawRoutes(routes, domicile);
+  };
+
   map.on("load", () => {
-    // sanitizeMap(map);
-    let domestic = getAirports(domesticCodes, fetchDomesticCoords);
-    let international = getAirports(internationalCodes, fetchIntlCoords);
-    window.setTimeout(() => {
-      drawAirports(domestic, "domestic");
-      drawAirports(international, "international");
-      let domesticRoutes = getRoutes(domestic);
-      let internationalRoutes = getRoutes(international);
-      drawRoutes(domesticRoutes, "domestic");
-      drawRoutes(internationalRoutes, "international");
-    }, 2000);
+    // Need to pass #draw as a callback to geocoding api call so that airports
+    // and routes can be drawn only after they are all fetched
+    let domestic = getAirports(domesticCodes, fetchDomesticCoords, draw);
+    let international = getAirports(internationalCodes, fetchIntlCoords, draw);
   });
 
   window.map = map;
-  window.fetchIntlCoords = fetchIntlCoords;
-
-  // map.addLayer({
-  //   id: 'terrain-data',
-  //   type: 'line',
-  //   source: {
-  //     type: 'vector',
-  //     url: 'mapbox://mapbox.mapbox-terrain-v2'
-  //   },
-  //   'source-layer': 'contour',
-  //   "paint": {
-  //     "line-color": "#32cd32"
-  //   }
-  // });
-  // //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
-  // //   map.setPaintProperty('sand', 'fill-color', '#00E5EE');
-  // //   map.setPaintProperty('building', 'fill-color', '#FF9933');
-  // //   map.setPaintProperty("road-primary", 'line-color', '#FF9933');
-
-  // //   let style = map.getStyle();
-  // //   let layers = style.layers;
-  // //   // debugger;
-  // //   // console.log(layers.map(layer => [layer.id, layer.type]));
-  // // });
 });
-
-const sanitizeMap = map => {
-  map.removeLayer("airport-label");
-  map.removeLayer("place-town");
-  map.removeLayer("place-city-sm");
-  map.removeLayer("place-city-md-s");
-  map.removeLayer("place-city-md-n");
-  map.removeLayer("place-city-lg-s");
-  map.removeLayer("place-city-lg-n");
-  map.removeLayer("state-label-sm");
-  map.removeLayer("state-label-md");
-  map.removeLayer("state-label-lg");
-  map.removeLayer("country-label-sm");
-  map.removeLayer("country-label-md");
-  map.removeLayer("country-label-lg");
-};
 
 const sfo = [-122.3790, 37.6213];
