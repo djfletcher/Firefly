@@ -58,7 +58,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       },
       "paint": {
-        "text-color": `${domicile === "domestic" ? "#4666FF" : "#DD0048"}`
+        "text-color": `${domicile === "domestic" ? "#00E5EE" : "#DD0048"}`
       }
     });
 
@@ -76,7 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
         'circle-radius': {
           'stops': [[4, 4], [10, 15]]
         },
-        "circle-color": `${domicile === "domestic" ? "#4666FF" : "#DD0048"}`,
+        "circle-color": `${domicile === "domestic" ? "#00E5EE" : "#DD0048"}`,
         "circle-blur": 0.2
       }
     });
@@ -96,7 +96,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       },
       "paint": {
-        "line-color": `${domicile === "domestic" ? "#4666FF" : "#DD0048"}`,
+        "line-color": `${domicile === "domestic" ? "#00E5EE" : "#DD0048"}`,
         "line-width": {
           "stops": [[3, 1], [10, 2], [16, 4]]
         }
@@ -135,7 +135,7 @@ window.addEventListener("DOMContentLoaded", () => {
   //   }
   // });
   // //   map.setPaintProperty('water', 'fill-color', '#D4AF37');
-  // //   map.setPaintProperty('sand', 'fill-color', '#00FFFF');
+  // //   map.setPaintProperty('sand', 'fill-color', '#00E5EE');
   // //   map.setPaintProperty('building', 'fill-color', '#FF9933');
   // //   map.setPaintProperty("road-primary", 'line-color', '#FF9933');
 
