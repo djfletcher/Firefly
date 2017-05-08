@@ -330,7 +330,7 @@ export const internationalCodes = [
   },
   {
     "id": "CAN",
-    "name": "Guangzhou, CN"
+    "name": "Guangzhou Baiyun International Airport, CN"
   },
   {
     "id": "CDG",
@@ -386,15 +386,15 @@ export const internationalCodes = [
   },
   {
     "id": "HKG",
-    "name": "Hong Kong, HK"
+    "name": "Hong Kong, CN"
   },
   {
     "id": "HND",
-    "name": "Tokyo-Haneda, JP"
+    "name": "Tokyo-Haneda International Airport, JP"
   },
   {
     "id": "ICN",
-    "name": "Seoul-Incheon, KR"
+    "name": "Incheon International Airport, KR"
   },
   {
     "id": "IST",
@@ -402,7 +402,7 @@ export const internationalCodes = [
   },
   {
     "id": "KEF",
-    "name": "Keflavik, IS"
+    "name": "Reykjanesbær, IS"
   },
   {
     "id": "KIX",

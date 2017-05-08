@@ -831,7 +831,7 @@ var internationalCodes = exports.internationalCodes = [{
   "name": "Bangalore, IN"
 }, {
   "id": "CAN",
-  "name": "Guangzhou, CN"
+  "name": "Guangzhou Baiyun International Airport, CN"
 }, {
   "id": "CDG",
   "name": "Paris-De Gaulle, FR"
@@ -873,19 +873,19 @@ var internationalCodes = exports.internationalCodes = [{
   "name": "Hangzhou, CN"
 }, {
   "id": "HKG",
-  "name": "Hong Kong, HK"
+  "name": "Hong Kong, CN"
 }, {
   "id": "HND",
-  "name": "Tokyo-Haneda, JP"
+  "name": "Tokyo-Haneda International Airport, JP"
 }, {
   "id": "ICN",
-  "name": "Seoul-Incheon, KR"
+  "name": "Incheon International Airport, KR"
 }, {
   "id": "IST",
   "name": "Istanbul, TR"
 }, {
   "id": "KEF",
-  "name": "Keflavik, IS"
+  "name": "Reykjanesbær, IS"
 }, {
   "id": "KIX",
   "name": "Osaka-Kansai, JP"
@@ -1138,6 +1138,7 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 
   window.map = map;
+  window.fetchIntlCoords = _geocoding_api.fetchIntlCoords;
 
   // map.addLayer({
   //   id: 'terrain-data',

@@ -121,6 +121,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   window.map = map;
+  window.fetchIntlCoords = fetchIntlCoords;
 
   // map.addLayer({
   //   id: 'terrain-data',
