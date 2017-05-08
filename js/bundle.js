@@ -533,11 +533,10 @@ module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCoords(airport, airports, draw) {
-  var country = "us";
+var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCoords(airport, airports, draw, map) {
   $.ajax({
     method: 'GET',
-    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + ' airport.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + ('&type=poi&language=en&country=' + country),
+    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + ' airport.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + '&type=poi&language=en&country=us',
     success: function success(r) {
       var geoJson = {};
       geoJson['geometry'] = r.features[0].geometry;
@@ -546,13 +545,13 @@ var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCo
       airports.push(geoJson);
       // Draw domestic routes after they've all been fetched
       if (airports.length === 77) {
-        draw(airports, "domestic");
+        draw(airports, "domestic", map);
       }
     }
   });
 };
 
-var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport, airports, draw) {
+var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport, airports, draw, map) {
   var comma = airport.name.indexOf(',');
   // Need to slice two indices past comma to get to country name
   var country = airport.name.slice(comma + 2);
@@ -571,14 +570,78 @@ var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport
       airports.push(geoJson);
       // Draw international routes after they've all been fetched
       if (airports.length === 52) {
-        draw(airports, "international");
+        draw(airports, "international", map);
       }
     }
   });
 };
 
 /***/ }),
-/* 2 */
+/* 2 */,
+/* 3 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _mapboxGl = __webpack_require__(0);
+
+var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
+
+var _airport_codes = __webpack_require__(5);
+
+var _geocoding_api = __webpack_require__(1);
+
+var _mapmaker = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.addEventListener("DOMContentLoaded", function () {
+  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
+  var map = new _mapboxGl2.default.Map({
+    container: 'map',
+    style: 'mapbox://styles/djfletcher/cj2f01l4s004j2sscj05ny5wb',
+    center: [-97.0000, 38.0000],
+    zoom: 3.7
+  });
+
+  map.on("load", function () {
+    // Pass draw as a callback to geocoding api call so that airports
+    // and routes are drawn only after they are all fetched
+    (0, _mapmaker.geocodeAirports)(_airport_codes.domesticCodes, _geocoding_api.fetchDomesticCoords, _mapmaker.draw, map);
+    (0, _mapmaker.geocodeAirports)(_airport_codes.internationalCodes, _geocoding_api.fetchIntlCoords, _mapmaker.draw, map);
+  });
+});
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -981,169 +1044,116 @@ var internationalCodes = exports.internationalCodes = [{
 }];
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _mapboxGl = __webpack_require__(0);
-
-var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
-
-var _routes = __webpack_require__(2);
-
-var _geocoding_api = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-window.addEventListener("DOMContentLoaded", function () {
-  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
-  var map = new _mapboxGl2.default.Map({
-    container: 'map',
-    style: 'mapbox://styles/djfletcher/cj2f01l4s004j2sscj05ny5wb',
-    center: [-97.0000, 38.0000],
-    zoom: 3.7,
-    scrollZoom: true
-  });
-
-  var getAirports = function getAirports(codes, fetchCoords, draw) {
-    var airports = [];
-    codes.forEach(function (code) {
-      return fetchCoords(code, airports, draw);
-    });
-    return airports;
-  };
-
-  var getRoutes = function getRoutes(airports) {
-    var routes = [];
-    airports.forEach(function (a) {
-      var geoJson = {};
-      geoJson['type'] = 'Feature';
-      geoJson['geometry'] = {
-        "type": "LineString",
-        "coordinates": [sfo, a.geometry.coordinates]
-      };
-      routes.push(geoJson);
-    });
-
-    return routes;
-  };
-
-  var drawAirports = function drawAirports(airports, domicile) {
-    map.addLayer({
-      "id": domicile + '-airport-names',
-      "type": "symbol",
-      "source": {
-        "type": "geojson",
-        "data": {
-          "type": "FeatureCollection",
-          "features": airports
-        }
-      },
-      "layout": {
-        "text-field": {
-          "stops": [[3, "{id}"], [6, "{name}"]]
-        },
-        "text-size": {
-          "stops": [[3, 14], [8, 20], [16, 30]]
-        },
-        "text-offset": {
-          "stops": [[3, [0, 1]], [12, [0, 2]], [20, [0, 4]]]
-        }
-      },
-      "paint": {
-        "text-color": '' + (domicile === "domestic" ? "#00E5EE" : "#DD0048")
-      }
-    });
-
-    map.addLayer({
-      "id": domicile + '-airports',
-      "type": "circle",
-      "source": {
-        "type": "geojson",
-        "data": {
-          "type": "FeatureCollection",
-          "features": airports
-        }
-      },
-      "paint": {
-        'circle-radius': {
-          'stops': [[4, 4], [10, 15]]
-        },
-        "circle-color": '' + (domicile === "domestic" ? "#00E5EE" : "#DD0048"),
-        "circle-blur": 0.2
-      }
-    });
-
-    return airports;
-  };
-
-  var drawRoutes = function drawRoutes(routes, domicile) {
-    map.addLayer({
-      "id": domicile + '-routes',
-      "type": "line",
-      "source": {
-        "type": "geojson",
-        "data": {
-          "type": "FeatureCollection",
-          "features": routes
-        }
-      },
-      "paint": {
-        "line-color": '' + (domicile === "domestic" ? "#00E5EE" : "#DD0048"),
-        "line-width": {
-          "stops": [[3, 1], [10, 2], [16, 4]]
-        }
-      }
-    });
-
-    return routes;
-  };
-
-  var draw = function draw(airports, domicile) {
-    drawAirports(airports, domicile);
-    var routes = getRoutes(airports);
-    drawRoutes(routes, domicile);
-  };
-
-  map.on("load", function () {
-    // Need to pass #draw as a callback to geocoding api call so that airports
-    // and routes can be drawn only after they are all fetched
-    var domestic = getAirports(_routes.domesticCodes, _geocoding_api.fetchDomesticCoords, draw);
-    var international = getAirports(_routes.internationalCodes, _geocoding_api.fetchIntlCoords, draw);
-  });
-
-  window.map = map;
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+var geocodeAirports = exports.geocodeAirports = function geocodeAirports(codes, fetchCoords, draw, map) {
+  var airports = [];
+  codes.forEach(function (code) {
+    return fetchCoords(code, airports, draw, map);
+  });
+  return airports;
+};
 
+var geocodeRoutes = exports.geocodeRoutes = function geocodeRoutes(airports) {
+  var routes = [];
+  airports.forEach(function (a) {
+    var geoJson = {};
+    geoJson['type'] = 'Feature';
+    geoJson['geometry'] = {
+      "type": "LineString",
+      "coordinates": [sfo, a.geometry.coordinates]
+    };
+    routes.push(geoJson);
+  });
+
+  return routes;
+};
+
+var drawAirports = exports.drawAirports = function drawAirports(airports, domicile, map) {
+  map.addLayer({
+    "id": domicile + '-airport-names',
+    "type": "symbol",
+    "source": {
+      "type": "geojson",
+      "data": {
+        "type": "FeatureCollection",
+        "features": airports
+      }
+    },
+    "layout": {
+      "text-field": {
+        "stops": [[3, "{id}"], [6, "{name}"]]
+      },
+      "text-size": {
+        "stops": [[3, 14], [8, 20], [16, 30]]
+      },
+      "text-offset": {
+        "stops": [[3, [0, 1]], [12, [0, 2]], [20, [0, 4]]]
+      }
+    },
+    "paint": {
+      "text-color": '' + (domicile === "domestic" ? "#00E5EE" : "#DD0048")
+    }
+  });
+
+  map.addLayer({
+    "id": domicile + '-airports',
+    "type": "circle",
+    "source": {
+      "type": "geojson",
+      "data": {
+        "type": "FeatureCollection",
+        "features": airports
+      }
+    },
+    "paint": {
+      'circle-radius': {
+        'stops': [[4, 4], [10, 15]]
+      },
+      "circle-color": '' + (domicile === "domestic" ? "#00E5EE" : "#DD0048"),
+      "circle-blur": 0.2
+    }
+  });
+
+  return airports;
+};
+
+var drawRoutes = exports.drawRoutes = function drawRoutes(routes, domicile, map) {
+  map.addLayer({
+    "id": domicile + '-routes',
+    "type": "line",
+    "source": {
+      "type": "geojson",
+      "data": {
+        "type": "FeatureCollection",
+        "features": routes
+      }
+    },
+    "paint": {
+      "line-color": '' + (domicile === "domestic" ? "#00E5EE" : "#DD0048"),
+      "line-width": {
+        "stops": [[3, 1], [10, 2], [16, 4]]
+      }
+    }
+  });
+
+  return routes;
+};
+
+var draw = exports.draw = function draw(airports, domicile, map) {
+  drawAirports(airports, domicile, map);
+  var routes = geocodeRoutes(airports);
+  drawRoutes(routes, domicile, map);
+};
+
+// Coordinates for SFO airport
 var sfo = [-122.3790, 37.6213];
 
 /***/ })
