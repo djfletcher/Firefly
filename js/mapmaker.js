@@ -60,10 +60,30 @@ export const drawAirports = (airports, domicile, map) => {
     },
     "paint": {
       'circle-radius': {
-        'stops': [[4, 4], [10, 15]]
+        'stops': [[4, 6], [10, 18]]
       },
       "circle-color": `${domicile === "domestic" ? "#00E5EE" : "#DD0048"}`,
-      "circle-blur": 0.2
+      "circle-blur": 0.8
+    }
+  });
+
+  map.addLayer({
+    "id": `${domicile}-airports-glow`,
+    "type": "circle",
+    "source": {
+      "type": "geojson",
+      "data": {
+        "type": "FeatureCollection",
+        "features": airports
+      }
+    },
+    "paint": {
+      'circle-radius': {
+        'stops': [[4, 2], [10, 7]]
+      },
+      "circle-color": `#FFFFFF`,
+      "circle-opacity": 0.8,
+      "circle-blur": 0.8
     }
   });
 
@@ -81,11 +101,15 @@ export const drawRoutes = (routes, domicile, map) => {
         "features": routes
       }
     },
+    "layout": {
+      "line-cap": "round"
+    },
     "paint": {
       "line-color": `${domicile === "domestic" ? "#00E5EE" : "#DD0048"}`,
       "line-width": {
         "stops": [[3, 1], [10, 2], [16, 4]]
-      }
+      },
+      "line-blur": 1
     }
   });
 
