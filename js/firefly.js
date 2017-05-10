@@ -1,7 +1,7 @@
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import { domesticCodes, internationalCodes } from './airport_codes';
 import { fetchDomesticCoords, fetchIntlCoords } from './geocoding_api';
-import { geocodeAirports, draw } from './mapmaker';
+import { geocodeAirports, draw } from './route_drawing';
 
 window.addEventListener("DOMContentLoaded", () => {
   mapboxgl.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';

@@ -10,11 +10,17 @@ export const fetchDomesticCoords = (airport, airports, draw, map) => {
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
       airports.push(geoJson);
-      // Draw domestic routes after they've all been fetched
-      if (airports.length === 77) {
+      // Draw domestic routes after they've all been fetched, regardless of
+      // the success of the last call
+      if (airport.id === 'XNA') {
         draw(airports, "domestic", map);
       }
     },
+    error: function(e) {
+      if (airport.id === 'XNA') {
+        draw(airports, "domestic", map);
+      }
+    }
   });
 };
 
@@ -37,8 +43,14 @@ export const fetchIntlCoords = (airport, airports, draw, map) => {
       geoJson['type'] = 'Feature';
       geoJson['properties'] = airport;
       airports.push(geoJson);
-      // Draw international routes after they've all been fetched
-      if (airports.length === 52) {
+      // Draw international routes after they've all been fetched, regardless of
+      // the success of the last call
+      if (airport.id === 'ZRH') {
+        draw(airports, "international", map);
+      }
+    },
+    error: function(e) {
+      if (airport.id === 'ZRH') {
         draw(airports, "international", map);
       }
     }

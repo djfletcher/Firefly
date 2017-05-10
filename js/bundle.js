@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -521,127 +521,10 @@ module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","
 
 
 //# sourceMappingURL=mapbox-gl.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCoords(airport, airports, draw, map) {
-  $.ajax({
-    method: 'GET',
-    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + ' airport.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + '&type=poi&language=en&country=us',
-    success: function success(r) {
-      var geoJson = {};
-      geoJson['geometry'] = r.features[0].geometry;
-      geoJson['type'] = 'Feature';
-      geoJson['properties'] = airport;
-      airports.push(geoJson);
-      // Draw domestic routes after they've all been fetched
-      if (airports.length === 77) {
-        draw(airports, "domestic", map);
-      }
-    }
-  });
-};
-
-var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport, airports, draw, map) {
-  var comma = airport.name.indexOf(',');
-  // Need to slice two indices past comma to get to country name
-  var country = airport.name.slice(comma + 2);
-  $.ajax({
-    method: 'GET',
-    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + '.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + ('&type=poi&language=en&country=' + country),
-    success: function success(r) {
-      var geoJson = {};
-      geoJson['geometry'] = r.features[0].geometry;
-      // If airport is in asia, draw coordinates west of SF instead of east
-      if (geoJson.geometry.coordinates[0] > 40) {
-        geoJson.geometry.coordinates[0] -= 360;
-      }
-      geoJson['type'] = 'Feature';
-      geoJson['properties'] = airport;
-      airports.push(geoJson);
-      // Draw international routes after they've all been fetched
-      if (airports.length === 52) {
-        draw(airports, "international", map);
-      }
-    }
-  });
-};
-
-/***/ }),
-/* 2 */,
-/* 3 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _mapboxGl = __webpack_require__(0);
-
-var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
-
-var _airport_codes = __webpack_require__(5);
-
-var _geocoding_api = __webpack_require__(1);
-
-var _mapmaker = __webpack_require__(6);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-window.addEventListener("DOMContentLoaded", function () {
-  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
-  var map = new _mapboxGl2.default.Map({
-    container: 'map',
-    style: 'mapbox://styles/djfletcher/cj2f01l4s004j2sscj05ny5wb',
-    center: [-97.0000, 38.0000],
-    zoom: 3.7
-  });
-
-  map.on("load", function () {
-    // Pass draw as a callback to geocoding api call so that airports
-    // and routes are drawn only after they are all fetched
-    (0, _mapmaker.geocodeAirports)(_airport_codes.domesticCodes, _geocoding_api.fetchDomesticCoords, _mapmaker.draw, map);
-    (0, _mapmaker.geocodeAirports)(_airport_codes.internationalCodes, _geocoding_api.fetchIntlCoords, _mapmaker.draw, map);
-  });
-});
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1042,6 +925,135 @@ var internationalCodes = exports.internationalCodes = [{
   "id": "ZRH",
   "name": "Zurich, CH"
 }];
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var fetchDomesticCoords = exports.fetchDomesticCoords = function fetchDomesticCoords(airport, airports, draw, map) {
+  $.ajax({
+    method: 'GET',
+    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + ' airport.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + '&type=poi&language=en&country=us',
+    success: function success(r) {
+      var geoJson = {};
+      geoJson['geometry'] = r.features[0].geometry;
+      geoJson['type'] = 'Feature';
+      geoJson['properties'] = airport;
+      airports.push(geoJson);
+      // Draw domestic routes after they've all been fetched, regardless of
+      // the success of the last call
+      if (airport.id === 'XNA') {
+        draw(airports, "domestic", map);
+      }
+    },
+    error: function error(e) {
+      if (airport.id === 'XNA') {
+        draw(airports, "domestic", map);
+      }
+    }
+  });
+};
+
+var fetchIntlCoords = exports.fetchIntlCoords = function fetchIntlCoords(airport, airports, draw, map) {
+  var comma = airport.name.indexOf(',');
+  // Need to slice two indices past comma to get to country name
+  var country = airport.name.slice(comma + 2);
+  $.ajax({
+    method: 'GET',
+    url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + airport.name + ' ' + airport.id + '.json?' + 'access_token=pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g' + ('&type=poi&language=en&country=' + country),
+    success: function success(r) {
+      var geoJson = {};
+      geoJson['geometry'] = r.features[0].geometry;
+      // If airport is in asia, draw coordinates west of SF instead of east
+      if (geoJson.geometry.coordinates[0] > 40) {
+        geoJson.geometry.coordinates[0] -= 360;
+      }
+      geoJson['type'] = 'Feature';
+      geoJson['properties'] = airport;
+      airports.push(geoJson);
+      // Draw international routes after they've all been fetched, regardless of
+      // the success of the last call
+      if (airport.id === 'ZRH') {
+        draw(airports, "international", map);
+      }
+    },
+    error: function error(e) {
+      if (airport.id === 'ZRH') {
+        draw(airports, "international", map);
+      }
+    }
+  });
+};
+
+/***/ }),
+/* 3 */,
+/* 4 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _mapboxGl = __webpack_require__(0);
+
+var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
+
+var _airport_codes = __webpack_require__(1);
+
+var _geocoding_api = __webpack_require__(2);
+
+var _route_drawing = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.addEventListener("DOMContentLoaded", function () {
+  _mapboxGl2.default.accessToken = 'pk.eyJ1IjoiZGpmbGV0Y2hlciIsImEiOiJjajF6bjR5djUwMzQzMndxazY3cnR5MGtmIn0.EhgTpiAXtQ6D0H82S24b5g';
+  var map = new _mapboxGl2.default.Map({
+    container: 'map',
+    style: 'mapbox://styles/djfletcher/cj2f01l4s004j2sscj05ny5wb',
+    center: [-97.0000, 38.0000],
+    zoom: 3.7
+  });
+
+  map.on("load", function () {
+    // Pass draw as a callback to geocoding api call so that airports
+    // and routes are drawn only after they are all fetched
+    (0, _route_drawing.geocodeAirports)(_airport_codes.domesticCodes, _geocoding_api.fetchDomesticCoords, _route_drawing.draw, map);
+    (0, _route_drawing.geocodeAirports)(_airport_codes.internationalCodes, _geocoding_api.fetchIntlCoords, _route_drawing.draw, map);
+  });
+});
 
 /***/ }),
 /* 6 */
